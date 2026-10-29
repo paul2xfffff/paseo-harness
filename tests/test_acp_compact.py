@@ -1,5 +1,5 @@
-from _assert import check, done
-import json, os, select, shutil, subprocess, sys, time
+from _assert import check, done, read_lines
+import json, os, shutil, subprocess, sys
 ROOT = "/tmp/acp_compact"
 shutil.rmtree(ROOT, ignore_errors=True); os.makedirs(ROOT)
 env = dict(os.environ, AGENT_MODEL="small", AGENT_MODELS='[{"id":"small","context":1200}]', AGENT_KEEP_TOKENS="1")
@@ -9,15 +9,7 @@ p = subprocess.Popen([sys.executable, DRIVER], cwd=ROOT, env=env,
                      text=True, encoding="utf-8", bufsize=1)
 seq = [0]; updates = []
 def send(obj): p.stdin.write(json.dumps(obj) + "\n"); p.stdin.flush()
-def read(timeout=8):
-    end = time.monotonic() + timeout
-    while time.monotonic() < end:
-        r, _, _ = select.select([p.stdout], [], [], 0.1)
-        if r:
-            line = p.stdout.readline()
-            if not line: return None
-            return json.loads(line)
-    raise TimeoutError
+read = read_lines(p)
 def request(method, params):
     seq[0] += 1; rid = seq[0]; send({"jsonrpc": "2.0", "id": rid, "method": method, "params": params})
     while True:

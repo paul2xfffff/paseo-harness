@@ -1,5 +1,5 @@
-from _assert import check, done
-import json, os, select, shutil, subprocess, sys, time
+from _assert import check, done, read_lines
+import json, os, shutil, subprocess, sys
 ROOT = "/tmp/acp_perm"
 shutil.rmtree(ROOT, ignore_errors=True); os.makedirs(ROOT)
 p = subprocess.Popen([sys.executable, "%s/drivers/driver_tools.py" % os.path.dirname(os.path.abspath(__file__))], cwd=ROOT,
@@ -10,15 +10,7 @@ seq = [0]
 def send(obj):
     p.stdin.write(json.dumps(obj) + "\n"); p.stdin.flush()
 
-def read(timeout=8):
-    end = time.monotonic() + timeout
-    while time.monotonic() < end:
-        r, _, _ = select.select([p.stdout], [], [], 0.1)
-        if r:
-            line = p.stdout.readline()
-            if not line: return None
-            return json.loads(line)
-    raise TimeoutError("no message")
+read = read_lines(p)
 
 def request(method, params):
     seq[0] += 1; rid = seq[0]

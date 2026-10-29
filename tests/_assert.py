@@ -4,7 +4,7 @@ These tests were written to print, which meant they could never fail: a regressi
 as a different line of output, not as a non-zero exit. `check` makes the expectation explicit
 and remembers failures, so `run.py` sees them.
 """
-import sys
+import json, queue, sys, threading
 
 FAILS = []
 
@@ -41,3 +41,32 @@ def done(label):
         print("FAILED: %s" % ", ".join(FAILS))
         sys.exit(1)
     print("%s OK" % label)
+
+
+def read_lines(proc, default_timeout=8):
+    """Read JSON lines from a child process without the select()/readline race.
+
+    select() on the raw fd reports nothing once the TextIOWrapper has buffered the next line,
+    so a burst of notifications makes the test time out and look like a server hang. A reader
+    thread owns the pipe instead; `read` waits at most `timeout` seconds for one line.
+    """
+    lines = queue.Queue()
+
+    def pump():
+        try:
+            for line in proc.stdout:
+                lines.put(line)
+        finally:
+            lines.put(None)
+    threading.Thread(target=pump, daemon=True).start()
+
+    def read(timeout=None):
+        limit = default_timeout if timeout is None else timeout
+        try:
+            line = lines.get(timeout=limit)
+        except queue.Empty:
+            raise TimeoutError("no message within %.0fs" % limit)
+        if line is None:
+            raise EOFError("child closed stdout")
+        return json.loads(line)
+    return read

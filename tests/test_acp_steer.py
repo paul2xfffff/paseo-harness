@@ -1,5 +1,5 @@
-from _assert import check, done
-import json, os, select, shutil, subprocess, sys, time
+from _assert import check, done, read_lines
+import json, os, shutil, subprocess, sys, time
 ROOT = "/tmp/acp_steer"
 shutil.rmtree(ROOT, ignore_errors=True); os.makedirs(ROOT)
 open(os.path.join(ROOT, "note.txt"), "w").write("hello\n")
@@ -8,14 +8,7 @@ p = subprocess.Popen([sys.executable, "%s/drivers/driver_steer.py" % os.path.dir
                      text=True, encoding="utf-8", bufsize=1)
 seq = [0]
 def send(o): p.stdin.write(json.dumps(o) + "\n"); p.stdin.flush()
-def read(t=8):
-    end = time.monotonic() + t
-    while time.monotonic() < end:
-        r, _, _ = select.select([p.stdout], [], [], 0.1)
-        if r:
-            line = p.stdout.readline()
-            if line: return json.loads(line)
-    raise TimeoutError
+read = read_lines(p)
 def request(method, params):
     seq[0] += 1; rid = seq[0]; send({"jsonrpc": "2.0", "id": rid, "method": method, "params": params})
     while True:

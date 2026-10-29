@@ -1466,8 +1466,9 @@ BUILTIN = Toolset(TOOLS)
 CHILD = Toolset([t for t in TOOLS if not t["name"].startswith("subagent")]); MCP_MAX_TOOLS = env("AGENT_MAX_MCP_TOOLS", 200); MCP_TIMEOUT = env("AGENT_MCP_TIMEOUT", 30)
 _NON_ID = re.compile(r"[^A-Za-z0-9_]")
 def mcp_leaf(e):
-    """The innermost reason a task group failed; a bare ExceptionGroup says nothing."""
-    while isinstance(e, BaseExceptionGroup) and len(e.exceptions) == 1: e = e.exceptions[0]
+    """The innermost reason a task group failed; a bare ExceptionGroup says nothing.
+    Duck-typed on `.exceptions`: Python 3.10 has no BaseExceptionGroup name to check."""
+    while getattr(e, "exceptions", None) and len(e.exceptions) == 1: e = e.exceptions[0]
     return e
 def mcp_tool_name(server, tool):
     """`mcp__<server>__<tool>`, reduced to the characters every provider accepts."""
