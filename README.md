@@ -1,5 +1,7 @@
 # harness
 
+[![tests](https://github.com/paul2xfffff/paseo-harness/actions/workflows/test.yml/badge.svg)](https://github.com/paul2xfffff/paseo-harness/actions/workflows/test.yml)
+
 Single-file coding agent backend. Speaks ACP (JSON-RPC) over stdio, so any ACP client
 (Paseo, Zed, editor plugin) can drive it.
 
