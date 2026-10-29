@@ -2,6 +2,9 @@
 
 [![tests](https://github.com/paul2xfffff/paseo-harness/actions/workflows/test.yml/badge.svg)](https://github.com/paul2xfffff/paseo-harness/actions/workflows/test.yml)
 
+> **English** — A single-file coding agent backend for ACP clients: one model loop, five tools, no framework.
+> **中文** — 单文件编码 agent 后端，为 ACP 客户端服务：一个模型循环、五个工具、无框架。
+
 Single-file coding agent backend. Speaks ACP (JSON-RPC) over stdio, so any ACP client
 (Paseo, Zed, editor plugin) can drive it.
 

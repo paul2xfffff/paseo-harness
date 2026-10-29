@@ -1,5 +1,10 @@
 # harness
 
+[![tests](https://github.com/paul2xfffff/paseo-harness/actions/workflows/test.yml/badge.svg)](https://github.com/paul2xfffff/paseo-harness/actions/workflows/test.yml)
+
+> **中文** — 单文件编码 agent 后端，为 ACP 客户端服务：一个模型循环、五个工具、无框架。
+> **English** — A single-file coding agent backend for ACP clients: one model loop, five tools, no framework.
+
 单文件编码 agent 后端。通过 stdio 讲 ACP（JSON-RPC），可被任意 ACP 客户端（Paseo、Zed、编辑器插件）驱动。
 
 用途：个人作为 Paseo 的 ACP provider，本地进程，无托管。
