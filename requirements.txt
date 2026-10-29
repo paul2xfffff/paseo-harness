@@ -1,0 +1,4 @@
+# exactly three; anything more and this stops being a single file you can read
+mcp>=2.3,<3
+anyio>=4.2,<5
+requests>=2.31,<3

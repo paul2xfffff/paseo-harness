@@ -1,0 +1,13 @@
+# every dot-directory: tool state, caches, local scratch (.venv, .harness, .archify, .idea, ...).
+# One rule instead of a list that goes stale the moment a new tool drops a folder here.
+.*/
+
+# except the one that belongs to the repository itself
+!.github/
+
+# python bytecode anywhere
+__pycache__/
+*.py[cod]
+
+# the only config file: it holds API keys
+config.json
